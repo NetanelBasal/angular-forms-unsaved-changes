@@ -1,11 +1,15 @@
 <form [formGroup]="settings" nz-form class="container">
   <nz-form-item>
-    <input nz-input formControlName="settingOne">
+    <input nz-input formControlName="settingOne" />
   </nz-form-item>
 
   <nz-form-item>
-    <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select something"
-               formControlName="settingTwo">
+    <nz-select
+      nzShowSearch
+      nzAllowClear
+      nzPlaceHolder="Select something"
+      formControlName="settingTwo"
+    >
       <nz-option nzLabel="Jack" nzValue="jack"></nz-option>
       <nz-option nzLabel="Lucy" nzValue="lucy"></nz-option>
       <nz-option nzLabel="Tom" nzValue="tom"></nz-option>
@@ -16,5 +20,12 @@
     <label nz-checkbox formControlName="settingThree">Checkbox</label>
   </nz-form-item>
 
-  <button nz-button nzType="primary" (click)="submit()" *ngIf="isDirty$ | async">Save</button>
+  <button
+    nz-button
+    nzType="primary"
+    (click)="submit()"
+    *ngIf="isDirty$ | async"
+  >
+    Save
+  </button>
 </form>
