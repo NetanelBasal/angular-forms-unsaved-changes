@@ -12,7 +12,9 @@ import {
   finalize,
   map,
   shareReplay,
-  startWith
+  startWith,
+  withLatestFrom,
+  distinctUntilChanged
 } from "rxjs/operators";
 import { AbstractControl } from "@angular/forms";
 import * as isEqual from "fast-deep-equal";
@@ -20,7 +22,7 @@ import * as isEqual from "fast-deep-equal";
 export function dirtyCheck<U>(control: AbstractControl, source: Observable<U>) {
   const valueChanges$ = concat(
     defer(() => of(control.value)),
-    control.valueChanges.pipe(debounceTime(300))
+    control.valueChanges.pipe(debounceTime(300), distinctUntilChanged())
   );
 
   let subscription: Subscription;
@@ -33,9 +35,9 @@ export function dirtyCheck<U>(control: AbstractControl, source: Observable<U>) {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  subscription = fromEvent(window, "beforeunload").subscribe(event => {
-    isDirty && (event.returnValue = false) && event.preventDefault();
-  });
+  subscription = fromEvent(window, "beforeunload")
+    .pipe(withLatestFrom(isDirty$))
+    .subscribe(([event, isDirty]) => isDirty && (event.returnValue = false));
 
   return isDirty$;
 }
